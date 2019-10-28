@@ -2,6 +2,8 @@ from optparse import OptionParser
 from operator import itemgetter
 
 delimiter="___"
+line_num=0
+comments_empty_num=0
 
 
 def find_indexes_in_list(names, full_names):
@@ -42,7 +44,6 @@ def store_info(compute_dict, rowKey_values, reserved_values, column_values, opti
                 if value in compute_dict[key][name]:
                     compute_dict[key][name][value] += 1
                 else:
-                    compute_dict[key][name] = dict()
                     compute_dict[key][name][value] = 1
             else:
                 compute_dict[key][name] = dict()
@@ -56,7 +57,8 @@ def store_info(compute_dict, rowKey_values, reserved_values, column_values, opti
 
 
 def handle_file(file, options):
-    line_num = 0;
+    global line_num
+    global comments_empty_num
     reserved_index = []
     rowKey_index = []
     column_index = []
@@ -67,8 +69,11 @@ def handle_file(file, options):
             if (line_num == 1):
                 rowKey_index, reserved_index, column_index = parse_indexes(line, options);
             else:
-                line = line.replace("\r", "empty")
+                line = line.replace("\r\n", "")
                 linesplit = line.strip().split("\t")
+                if len(linesplit) == 12:
+                    linesplit.append("empty")
+                    comments_empty_num += 1
                 rowKey_values = itemgetter(*rowKey_index)(linesplit)
                 reserved_values = itemgetter(*reserved_index)(linesplit)
                 column_values = itemgetter(*column_index)(linesplit)
@@ -81,9 +86,10 @@ def handle_file(file, options):
 
 def compute_distribution(options, compute_dict):
     global delimiter
-    output_file = options.file + ".distribution"
+    output_file = options.file + ".distribution.txt"
     of = open(output_file, "w")
     for k, v in compute_dict.iteritems():
+        of.write("\n")
         key_content = []
         reserved_content = []
         name2value_and_count = dict()
@@ -109,6 +115,7 @@ def compute_distribution(options, compute_dict):
             value_and_count.insert(0, name)
             of.write("\t".join(value_and_count) + "\n")
             value_and_count = []
+    of.write("\n\ntotal line number : {} comments_empty_num : {}".format(line_num - 1, comments_empty_num))
     of.close()
 
 
