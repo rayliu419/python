@@ -119,7 +119,7 @@ def compute_distribution(options, compute_dict):
     of.close()
 
 
-# usage: python feature_distribution.py --rowKey "fnsku,asin" --reserved "asin,product-name" --column "reason,customer-comments" --file "c-return.txt"
+# usage: python feature_distribution.py --rowKey "fnsku" --reserved "asin,product-name" --column "reason,customer-comments" --file "c-return.txt"
 if __name__ == "__main__":
     parser = OptionParser()
     parser.add_option("-k", "--rowKeys", action="store", type="string", dest='rowKeys')

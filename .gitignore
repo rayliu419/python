@@ -1,0 +1,6 @@
+*.DS_STORE
+.ipynb_checkpoints
+venv/
+data/
+.idea/
+__pycache__/

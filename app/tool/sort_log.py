@@ -18,12 +18,12 @@ with open(file) as f:
             timeStamp = int(time.mktime(timeArray))
             lastTimeStamp = timeStamp
         except ValueError:
-            if (lastTimeStamp == -1):
+            if lastTimeStamp == -1:
                 print("current line can't attach to a timestamp")
                 sys.exit(-1)
             else:
                 timeStamp = lastTimeStamp
-        if (timeStamp in timeToLines):
+        if timeStamp in timeToLines:
             timeToLines[timeStamp].append(line);
         else:
             newRecord = []
